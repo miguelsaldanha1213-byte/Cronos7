@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta name="google-site-verification" content="sSd18X-N2QfQif6989EZpVW29j8-zHF2vHswEXJ5Ask" />
     <meta charset="UTF-8">
-    <meta name="google-site-verification" content="0Rzh2lKzEHpzCpz9KktFd7ZESCUbG_Oo42uzXtlpotE" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>https://miguelsaldanha1213-byte.github.io/Cronos7/</title>
+    <meta name="google-site-verification" content="sSd18X-N2QfQif6989EZpVW29j8-zHF2vHswEXJ5Ask" />
+    
+    <title>Cronos 7 | MDDECN Creator Hub</title>
+    
     <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
     <style>
-        /* YOUR ORIGINAL STYLE */
         body {
             background: linear-gradient(to right, #f0f0f0, #800080);
             font-family: 'Segoe UI', sans-serif;
@@ -48,7 +48,6 @@
         }
         button:hover { transform: scale(1.05); opacity: 0.9; }
 
-        /* CONTAINERS */
         .container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -61,7 +60,6 @@
         }
         .hidden { display: none; }
 
-        /* FORMULARY */
         .formulary {
             display: flex;
             flex-direction: column;
@@ -76,7 +74,6 @@
             outline: none;
         }
 
-        /* IDE EDITOR */
         textarea {
             width: 100%;
             height: 200px;
@@ -161,7 +158,6 @@
         let selectedLang = 'html';
         let pyodide = null;
 
-        // LOGIN LOGIC
         function handleLogin() {
             const email = document.getElementById('emailUser').value;
             const pass = document.getElementById('passUser').value;
@@ -174,7 +170,6 @@
             }
         }
 
-        // NAVIGATION
         async function openIDE(lang) {
             selectedLang = lang;
             document.getElementById('hub-page').classList.add('hidden');
@@ -194,7 +189,6 @@
             document.getElementById('hub-page').classList.remove('hidden');
         }
 
-        // REAL COMPILER LOGIC
         async function runCode() {
             const code = document.getElementById('code-input').value;
             const outputDiv = document.getElementById('output');
@@ -220,9 +214,8 @@
         }
 
         function publish() {
-            alert("Success! Your " + selectedLang + " project is now public on the MDDECN Repository.");
+            alert("Success! Your project is now being indexed.");
         }
     </script>
 </body>
 </html>
-

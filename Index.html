@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="0Rzh2lKzEHpzCpz9KktFd7ZESCUbG_Oo42uzXtlpotE" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>https://miguelsaldanha1213-byte.github.io/cronos/</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+    <style>
+        /* YOUR ORIGINAL STYLE */
+        body {
+            background: linear-gradient(to right, #f0f0f0, #800080);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        } 
+        h1 {
+            background-color: red;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 22px;
+            text-align: center;
+        } 
+        p {
+            background: linear-gradient(to right, #000, #800);
+            color: #FFF;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        } 
+        button {
+            background: linear-gradient(to right, #f0f, #800080);
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Sans-Serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 5px;
+            transition: 0.3s;
+        }
+        button:hover { transform: scale(1.05); opacity: 0.9; }
+
+        /* CONTAINERS */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .hidden { display: none; }
+
+        /* FORMULARY */
+        .formulary {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        input {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+        }
+
+        /* IDE EDITOR */
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        #output {
+            background: white;
+            color: black;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            min-height: 50px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+        .lang-tag {
+            background: #FFD700;
+            color: black;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-page" class="container">
+        <h1>Welcome to Chronos 7!</h1>
+        <p>Beta version. We are working on JS codes. Chat us if any problem happens. Community: MDDECN.</p>
+        
+        <div style="margin-bottom: 20px;">
+            <a href="https://discord.gg/dXe9jspdZ"><button>Discord Updates</button></a>
+            <a href="https://github.com/miguelsaldanha1213-byte"><button>GitHub Updates</button></a>
+        </div>
+
+        <div class="formulary">
+            <label style="color: white; font-weight: bold;">E-mail:</label>
+            <input type="email" id="emailUser" placeholder="name@example.com">
+            <label style="color: white; font-weight: bold;">Password:</label>
+            <input type="password" id="passUser" placeholder="••••••••">
+            <button onclick="handleLogin()">GO IN</button>
+        </div>
+    </div>
+
+    <div id="hub-page" class="container hidden">
+        <h1>MDDECN Creator Hub</h1>
+        <p>Select your workspace:</p>
+        <button onclick="openIDE('html')">🌐 Create Website</button>
+        <button onclick="openIDE('python')">🐍 Create Python App</button>
+        <button onclick="alert('Redirecting to Roblox Cloud...')">🎮 Create Roblox Game</button>
+        <br><br>
+        <button style="background: #444;" onclick="location.reload()">Logout</button>
+    </div>
+
+    <div id="ide-page" class="container hidden">
+        <h1 id="ide-title">Editor</h1>
+        <div id="lang-indicator" class="lang-tag">MODE: HTML</div>
+        
+        <textarea id="code-input" placeholder="Type your code here..."></textarea>
+        
+        <div style="margin-top: 10px;">
+            <button style="background: green;" onclick="runCode()">▶ PLAY</button>
+            <button style="background: blue;" onclick="publish()">🚀 Publish</button>
+            <button style="background: #666;" onclick="backToHub()">Back</button>
+        </div>
+
+        <div id="output-container">
+            <h3 style="color: white;">Live Output:</h3>
+            <div id="output">Result will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        let selectedLang = 'html';
+        let pyodide = null;
+
+        // LOGIN LOGIC
+        function handleLogin() {
+            const email = document.getElementById('emailUser').value;
+            const pass = document.getElementById('passUser').value;
+
+            if(email.includes('@') && pass.length >= 4) {
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('hub-page').classList.remove('hidden');
+            } else {
+                alert("Please enter a valid email and 4+ character password.");
+            }
+        }
+
+        // NAVIGATION
+        async function openIDE(lang) {
+            selectedLang = lang;
+            document.getElementById('hub-page').classList.add('hidden');
+            document.getElementById('ide-page').classList.remove('hidden');
+            document.getElementById('lang-indicator').innerText = "MODE: " + lang.toUpperCase();
+            document.getElementById('ide-title').innerText = lang === 'html' ? "Web Builder" : "Python Studio";
+            
+            if(lang === 'python' && !pyodide) {
+                document.getElementById('output').innerText = "Loading Python Engine... Please wait.";
+                pyodide = await loadPyodide();
+                document.getElementById('output').innerText = "Python Ready!";
+            }
+        }
+
+        function backToHub() {
+            document.getElementById('ide-page').classList.add('hidden');
+            document.getElementById('hub-page').classList.remove('hidden');
+        }
+
+        // REAL COMPILER LOGIC
+        async function runCode() {
+            const code = document.getElementById('code-input').value;
+            const outputDiv = document.getElementById('output');
+            outputDiv.style.color = "black";
+
+            if(selectedLang === 'html') {
+                outputDiv.innerHTML = code;
+            } else if(selectedLang === 'python') {
+                try {
+                    pyodide.runPython(`
+                        import sys
+                        import io
+                        sys.stdout = io.StringIO()
+                    `);
+                    await pyodide.runPythonAsync(code);
+                    let stdout = pyodide.runPython("sys.stdout.getvalue()");
+                    outputDiv.innerText = stdout || "Executed (No output).";
+                } catch(err) {
+                    outputDiv.style.color = "red";
+                    outputDiv.innerText = err;
+                }
+            }
+        }
+
+        function publish() {
+            alert("Success! Your " + selectedLang + " project is now public on the MDDECN Repository.");
+        }
+    </script>
+</body>
+</html>
+
